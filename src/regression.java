@@ -1,7 +1,10 @@
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import packages.CSR;
 import packages.FileOps;
+import packages.WorkerThread;
 import packages.vector;
 
 /*
@@ -20,7 +23,7 @@ public class regression {
     static String valFile = "project_3/rep1/mnist_validation.csv";
 
     static double[] lambdas = new double[]{0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 5.0};
-    static double stopping = 0.001;
+    static double stopping = 0.0001;
 
     public static void main(String[] args) {
         System.out.println("Fetching");
@@ -32,44 +35,46 @@ public class regression {
         int[] order = permute(trainingvals[0].length);
 
         CSR X = CSR.toCSR(trainingvals);
-        double weights[][] = new double[10][trainingvals[0].length];
+        double weights[][][] = new double[lambdas.length][10][trainingvals[0].length];
 
         vector[] xi = getxis(trainingvals);
+        double l2[] = new double[xi.length];
 
-        double bestlambda = -1;
-        double bestacc = -1;
-        for (double lambda : lambdas) {
-            System.out.println("training for lambda = " + lambda);
-
-            for (int Cl = 0; Cl < 10; Cl++) {
-                weights[Cl] = fillrands(weights[Cl]);
-                System.out.println(Cl);
-                final double[] y = getYVals(Cl, trainSet);
-                double err = -1;
-                while (true) {
-                    for (int currentW : order) {
-                        double temp = weights[Cl][currentW];
-                        weights[Cl][currentW] = 0;
-                        double numer = CSR.vectormult(xi[currentW],
-                                CSR.matsub(y, CSR.multiply(X, weights[Cl])));
-                        double denom = CSR.vectormult(xi[currentW], xi[currentW]) + lambda;
-                        weights[Cl][currentW] = numer / denom;
-                    }
-
-                    double currerr = geterr(X, weights[Cl], y);
-                    System.out.println("error: " + currerr);
-
-                    if (err != -1) {
-                        if ((err - currerr) / err <= stopping) {
-                            break;
-                        }
-                    }
-                    err = currerr;
-                }
-            }
-            System.out.println("validating");
-            System.out.println(validate(weights, valSet));
+        for (int i = 0; i < xi.length; i++) {
+            l2[i] = CSR.vectormult(xi[i], xi[i]);
         }
+
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+
+        for (int i = 0; i < lambdas.length; i++) {
+            for (int Cl = 0; Cl < 10; Cl++) {
+
+                WorkerThread task = new WorkerThread(
+                        X,
+                        weights[i][Cl],
+                        lambdas[i],
+                        Cl,
+                        getYVals(Cl, trainSet),
+                        xi,
+                        l2,
+                        order);
+                executor.execute(task);
+            }
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+
+        double bestacc = -1;
+        int bestlambda = -1;
+        for (int i = 0; i < lambdas.length; i++) {
+            double temp = validate(weights[i], valSet);
+            if (temp > bestacc) {
+                bestacc = temp;
+                bestlambda = i;
+            }
+        }
+
         System.out.println();
     }
 
@@ -93,14 +98,15 @@ public class regression {
         return score / (double) valSet.length;
     }
 
-//    static double[] norm(double[] a) {
-//        for (int i = 0; i < a.length; i++) {
-//            a[i] = (a[i] / 100) - 2;
-//        }
-//        return a;
-//    }
+    static double[] norm(double[] a) {
+        for (int i = 0; i < a.length; i++) {
+            a[i] = (a[i] >= 0) ? 1 : -1;
+        }
+        return a;
+    }
+
     static double geterr(CSR X, double[] w, double[] y) {
-        double[] ans = CSR.matsub(y, CSR.multiply(X, CSR.toVector(w)));
+        double[] ans = CSR.matsub(y, norm(CSR.multiply(X, CSR.toVector(w))));
         double res = 0;
         for (double x : ans) {
             res += x * x;
