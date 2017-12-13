@@ -68,8 +68,14 @@ public class FileOps {
         double[][] output = new double[input.size()][input.get(0).split(",").length];
         for (int i = 0; i < input.size(); i++) {
             String[] words = input.get(i).split(",");
+            double sum = 0;
             for (int j = 0; j < words.length; j++) {
                 output[i][j] = Double.parseDouble(words[j]);
+                sum += output[i][j] * output[i][j];
+            }
+            sum = Math.sqrt(sum);
+            for (int j = 0; j < words.length; j++) {
+                output[i][j] /= sum;
             }
         }
 
