@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import packages.CSR;
 import packages.FileOps;
-import packages.WorkerThread;
+import packages.WorkerThread2;
 import packages.vector;
 
 /*
@@ -66,7 +66,7 @@ public class nn_regression {
         for (int i = 0; i < lambdas.length; i++) {
             for (int Cl = 0; Cl < 10; Cl++) {
 
-                WorkerThread task = new WorkerThread(X, weights[i][Cl],
+                WorkerThread2 task = new WorkerThread2(X, weights[i][Cl],
                         lambdas[i], Cl, getYVals(Cl, trainSet), xi, l2, order);
                 executor.execute(task);
             }

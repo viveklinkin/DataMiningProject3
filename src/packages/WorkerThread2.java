@@ -9,7 +9,7 @@ package packages;
  *
  * @author vivek
  */
-public class WorkerThread implements Runnable {
+public class WorkerThread2 implements Runnable {
 
     double w[];
     double lambda;
@@ -21,7 +21,7 @@ public class WorkerThread implements Runnable {
     int Cl;
     static final double stopping = 0.0001;
 
-    public WorkerThread(CSR X, double[] w, double lambda, int Cl, double[] y,
+    public WorkerThread2(CSR X, double[] w, double lambda, int Cl, double[] y,
             vector[] xi, double[] l2, int[] order) {
         this.X = X;
         this.w = w;
@@ -40,7 +40,7 @@ public class WorkerThread implements Runnable {
                 double temp = w[currentW];
                 w[currentW] = 0;
                 double numer = CSR.vectormult(xi[currentW],
-                        CSR.matsub(y, norm(CSR.multiply(X, w))));
+                        CSR.matsub(norm(CSR.multiply(X, w)), y));
                 double denom = l2[currentW] + lambda;
                 w[currentW] = numer / denom;
             }
@@ -72,9 +72,9 @@ public class WorkerThread implements Runnable {
     }
 
     static double[] norm(double[] a) {
-        // for (int i = 0; i < a.length; i++) {
-        // a[i] = (a[i] >= 0) ? 1 : -1;
-        // }
+        for (int i = 0; i < a.length; i++) {
+            a[i] = (a[i] >= 1) ? a[i] : 0;
+        }
         return a;
     }
 }
