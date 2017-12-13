@@ -72,9 +72,9 @@ public class WorkerThread2 implements Runnable {
     }
 
     static double[] norm(double[] a) {
-        for (int i = 0; i < a.length; i++) {
-            a[i] = (a[i] >= 0.5) ? a[i] : 0;
-        }
+        // for (int i = 0; i < a.length; i++) {
+        //     a[i] = (a[i] >= 0.5) ? a[i] : 0;
+        // }
         return a;
     }
 }
