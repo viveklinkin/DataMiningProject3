@@ -96,8 +96,15 @@ public class nn_regression {
             for (int j = 0; j < weights[bestlambda][i].length; j++) {
                 sb.append(weights[bestlambda][i][j] + ",");
             }
-            sb.deleteCharAt(sb.length());
+            sb.deleteCharAt(sb.length() - 1);
             outputweights.add(sb.toString());
+        }
+
+        for (int i = 0; i < weights[bestlambda].length; i++) {
+            for (int j = 0; j < weights[bestlambda][i].length; j++) {
+                System.out.print(weights[bestlambda][i][j] + ",");
+            }
+            System.out.println("\n");
         }
 
         FileOps.writeFile(options, outputweights);
