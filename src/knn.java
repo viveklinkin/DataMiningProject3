@@ -13,9 +13,9 @@ import packages.Point;
  */
 public class knn {
 
-    static String testFile = "project_3/rep3/mnist_test.csv";
-    static String trainFile = "project_3/rep3/mnist_train.csv";
-    static String valFile = "project_3/rep3/mnist_validation.csv";
+    static String testFile = "project_3/rep1/mnist_test.csv";
+    static String trainFile = "project_3/rep1/mnist_train.csv";
+    static String valFile = "project_3/rep1/mnist_validation.csv";
 
     public static void main(String[] args) {
         System.out.println("Reading");

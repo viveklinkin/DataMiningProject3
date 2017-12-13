@@ -71,10 +71,12 @@ public class FileOps {
             double sum = 0;
             for (int j = 0; j < words.length; j++) {
                 output[i][j] = Double.parseDouble(words[j]);
-                sum += output[i][j] * output[i][j];
+                if (j != 0) {
+                    sum += output[i][j] * output[i][j];
+                }
             }
             sum = Math.sqrt(sum);
-            for (int j = 0; j < words.length; j++) {
+            for (int j = 1; j < words.length; j++) {
                 output[i][j] /= sum;
             }
         }

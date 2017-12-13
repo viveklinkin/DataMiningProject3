@@ -50,7 +50,7 @@ public class WorkerThread2 implements Runnable {
                     + currerr);
 
             if (err != -1) {
-                if (Math.abs(err - currerr) / err <= stopping) {
+                if (Math.abs(err - currerr) / err <= stopping || err == 0) {
                     break;
                 }
             }
