@@ -6,8 +6,11 @@
 package packages;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,23 @@ import java.util.List;
  * @author vivek
  */
 public class FileOps {
+
+    public static void writeFile(String filePath, List<String> data) {
+        File f = new File(filePath);
+        BufferedWriter bw;
+
+        try {
+            bw = new BufferedWriter(new FileWriter(f));
+            for (String x : data) {
+                bw.write(x + "\n");
+            }
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("Error creating file");
+        }
+
+    }
 
     public static List<String> openCSV(String path) {
         File f = new File(path);
@@ -48,7 +68,7 @@ public class FileOps {
         double[][] output = new double[input.size()][input.get(0).split(",").length];
         for (int i = 0; i < input.size(); i++) {
             String[] words = input.get(i).split(",");
-            for(int j = 0; j < words.length; j++){
+            for (int j = 0; j < words.length; j++) {
                 output[i][j] = Double.parseDouble(words[j]);
             }
         }

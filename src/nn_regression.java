@@ -31,7 +31,7 @@ public class nn_regression {
     static String trainFile = "project_3/rep1/mnist_train.csv";
     static String valFile = "project_3/rep1/mnist_validation.csv";
     static String outputFile = "";
-    static String options = "";
+    static String options = "output/nnweights.csv";
     static double[] lambdas = new double[]{0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 5.0};
     static double stopping = 0.0001;
 
@@ -90,6 +90,17 @@ public class nn_regression {
         System.out.println("time: " + (System.currentTimeMillis() - starting)
                 / 1000);
 
+        List<String> outputweights = new ArrayList<>();
+        for (int i = 0; i < weights[bestlambda].length; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < weights[bestlambda][i].length; j++) {
+                sb.append(weights[bestlambda][i][j] + ",");
+            }
+            sb.deleteCharAt(sb.length());
+            outputweights.add(sb.toString());
+        }
+
+        FileOps.writeFile(options, outputweights);
     }
 
     static double validate(double[][] w, double[][] valSet) {
