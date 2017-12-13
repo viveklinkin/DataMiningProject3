@@ -63,7 +63,7 @@ public class FileOps {
         return output;
     }
 
-    public static double[][] getCSVContentAsMatrix(String path) {
+    public static double[][] getNormalisedCSVContentAsMatrix(String path) {
         List<String> input = openCSV(path);
         double[][] output = new double[input.size()][input.get(0).split(",").length];
         for (int i = 0; i < input.size(); i++) {
