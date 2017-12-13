@@ -1,4 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+/**
+ *
+ * @author vivek
+ */
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -16,15 +25,14 @@ import packages.vector;
  *
  * @author vivek
  */
-public class regression {
+public class nn_regression {
 
     static String testFile = "project_3/rep1/mnist_test.csv";
     static String trainFile = "project_3/rep1/mnist_train.csv";
     static String valFile = "project_3/rep1/mnist_validation.csv";
     static String outputFile = "";
     static String options = "";
-    static double[] lambdas = new double[]{0.01, 0.05, 0.1, 0.5, 1.0, 2.0,
-        5.0};
+    static double[] lambdas = new double[]{0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 5.0};
     static double stopping = 0.0001;
 
     public static void main(String[] args) {
@@ -157,7 +165,7 @@ public class regression {
     static final double[] getYVals(int a, double[][] b) {
         double[] res = new double[b.length];
         for (int i = 0; i < b.length; i++) {
-            res[i] = (b[i][0] == a) ? 1 : -1;
+            res[i] = (b[i][0] == a) ? 1 : 0;
         }
         return res;
     }
