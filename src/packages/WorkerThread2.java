@@ -46,21 +46,17 @@ public class WorkerThread2 implements Runnable {
 			}
 
 			double currerr = geterr(X, w, y, lambda);
-			//System.out.println("Cl:" + Cl + "\t lambda:" + lambda + "\t error: "
-			//		+ currerr);
+			System.out.println("Cl:" + Cl + "\t lambda:" + lambda
+					+ "\t error: " + currerr);
 
 			if (err != -1) {
-				if (Math.abs(err - currerr) / err <= stopping || err == 0) {
+				if ((err - currerr) / err <= stopping || err == 0) {
 					break;
 				}
 			}
 			err = currerr;
 		}
 		System.out.println("Converged for: " + Cl + "," + lambda);
-	}
-
-	private void processmessage() {
-
 	}
 
 	static double geterr(CSR X, double[] w, double[] y, double lambda) {

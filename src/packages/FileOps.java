@@ -83,4 +83,24 @@ public class FileOps {
 
         return output;
     }
+    
+    public static double[][] getNormalisedCSVContentAsMatrix(String path1, String path2, String path3) {
+        double[][] f1 = getNormalisedCSVContentAsMatrix(path1);
+        double[][] f2 = getNormalisedCSVContentAsMatrix(path2);
+        double[][] f3 = getNormalisedCSVContentAsMatrix(path3);
+        
+        
+        double[][] f4 = new double[f1.length + f2.length + f3.length][f1[0].length];
+        
+        for(int i = 0; i < f1.length; i++){
+        	f4[i] = f1[i];
+        }int iter = f1.length;
+        for(int i = 0; i < f2.length; i++, iter++){
+        	f4[iter] = f2[i];
+        }
+        for(int i = 0; i < f3.length; i++, iter++){
+        	f4[iter] = f3[i];
+        }
+        return f4;
+    }
 }

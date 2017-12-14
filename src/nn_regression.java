@@ -19,7 +19,7 @@ import packages.vector;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * and open the template in the editor.                                STARTTIME: 17:33
  */
 /**
  * 
@@ -27,13 +27,13 @@ import packages.vector;
  */
 public class nn_regression {
 
-	static String testFile = "project_3/rep1/mnist_test.csv";
-	static String trainFile = "project_3/rep1/mnist_train.csv";
-	static String valFile = "project_3/rep1/mnist_validation.csv";
-	static String outputFile = "";
-	static String options = "output/nnweights.csv";
-	static double[] lambdas = new double[] { 0.01, 0.05, 0.1, 0.5, 1.0, 2.0,
-			5.0 };
+	static String testFile = "/home/vaidy083/workspace/DMAssignment3/project_3/rep1/mnist_test.csv";
+	static String trainFile = "/home/vaidy083/workspace/DMAssignment3/project_3/rep1/mnist_train.csv";
+	static String valFile = "/home/vaidy083/workspace/DMAssignment3/project_3/rep1/mnist_validation.csv";
+	static String outputFile = "/home/vaidy083/workspace/DMAssignment3/output/nnclassrep1-test.csv";
+	static String options = "/home/vaidy083/workspace/DMAssignment3/output/nnweightsrep1-test.csv";
+
+	static double[] lambdas = new double[] { 2.0 };
 	static double stopping = 0.0001;
 
 	// 0:train-file, 1:validation-file, 2:test-file, 3:output-file 4:[options]
@@ -51,12 +51,9 @@ public class nn_regression {
 			setVals(args);
 		}
 
-		long starting = System.currentTimeMillis();
 		System.out.println("Fetching");
-		double[][] testSet = FileOps.getNormalisedCSVContentAsMatrix(testFile);
-		double[][] trainSet = FileOps
-				.getNormalisedCSVContentAsMatrix(trainFile);
-		double[][] valSet = FileOps.getNormalisedCSVContentAsMatrix(valFile);
+		double[][] trainSet = FileOps.getNormalisedCSVContentAsMatrix(
+				trainFile, valFile, testFile);
 
 		double[][] trainingvals = CSR.dropColumn(trainSet, 0);
 		int[] order = permute(trainingvals[0].length);
@@ -73,9 +70,11 @@ public class nn_regression {
 
 		for (int i = 0; i < lambdas.length; i++) {
 			for (int j = 0; j < 10; j++) {
-				 weights[i][j] = fillrands(weights[i][j]);
+				weights[i][j] = fillrands(weights[i][j]);
 			}
 		}
+
+		System.out.println("Training");
 		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors
 				.newCachedThreadPool();
 
@@ -91,36 +90,29 @@ public class nn_regression {
 		while (!executor.isTerminated()) {
 		}
 
-		double bestacc = -1;
-		int bestlambda = -1;
-		for (int i = 0; i < lambdas.length; i++) {
-			double temp = validate(weights[i], valSet);
-			if (temp > bestacc) {
-				bestacc = temp;
-				bestlambda = i;
-			}
-		}
+		// double bestacc = -1;
+		// int bestlambda = -1;
+		// for (int i = 0; i < lambdas.length; i++) {
+		// double temp = validate(weights[i], valSet);
+		// if (temp > bestacc) {
+		// bestacc = temp;
+		// bestlambda = i;
+		// }
+		// }
 
-		System.out.println("BESTLambda: " + lambdas[bestlambda]);
-		System.out.println("BESTACC: " + bestacc);
-		System.out.println("time: " + (double)(System.currentTimeMillis() - starting)
-				/ 1000.0);
+		// System.out.println("BESTLambda: " + lambdas[bestlambda]);
+		// System.out.println("BESTACC: " + bestacc);
+		// System.out.println("time: "
+		// + (double) (System.currentTimeMillis() - starting) / 1000.0);
 
 		List<String> outputweights = new ArrayList<>();
-		for (int i = 0; i < weights[bestlambda].length; i++) {
+		for (int i = 0; i < weights[0].length; i++) {
 			StringBuilder sb = new StringBuilder();
-			for (int j = 0; j < weights[bestlambda][i].length; j++) {
-				sb.append(weights[bestlambda][i][j] + ",");
+			for (int j = 0; j < weights[0][i].length; j++) {
+				sb.append(weights[0][i][j] + ",");
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			outputweights.add(sb.toString());
-		}
-
-		for (int i = 0; i < weights[bestlambda].length; i++) {
-			for (int j = 0; j < weights[bestlambda][i].length; j++) {
-				// System.out.print(weights[bestlambda][i][j] + ",");
-			}
-			// System.out.println("\n");
 		}
 
 		FileOps.writeFile(options, outputweights);
@@ -189,8 +181,7 @@ public class nn_regression {
 	static double[] fillrands(double[] f) {
 		Random rand = new Random();
 		for (int i = 0; i < f.length; i++) {
-			f[i] = rand.nextDouble() * ((rand.nextInt(1) == 0) ? 1 : -1)
-					/ 1000.0;
+			f[i] = rand.nextDouble() / 1000.0;
 		}
 		return f;
 	}

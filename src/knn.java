@@ -14,10 +14,10 @@ import packages.Point;
  */
 public class knn {
 
-	static String testFile = "project_3/rep2/mnist_test.csv";
-	static String trainFile = "project_3/rep2/mnist_train.csv";
-	static String valFile = "project_3/rep2/mnist_validation.csv";
-	static String outputFile = "output/knnoutput.csv";
+	static String testFile = "project_3/rep3/mnist_test.csv";
+	static String trainFile = "project_3/rep3/mnist_train.csv";
+	static String valFile = "project_3/rep3/mnist_validation.csv";
+	static String outputFile = "output/knnoutput3.csv";
 
 	// 0:train-file, 1:validation-file, 2:test-file, 3:output-file //
 	// NA: 4:[options]
